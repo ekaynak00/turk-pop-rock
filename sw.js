@@ -1,5 +1,5 @@
 /* Çevrimdışı destek. Yeni dosya yayımladığında VERSION değerini artır. */
-const VERSION = "tgorm-v3";
+const VERSION = "tgorm-v4";
 const CORE = [
   "./",
   "index.html",
