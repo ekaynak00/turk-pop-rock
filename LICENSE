@@ -1,0 +1,38 @@
+Copyright (c) 2026 Erdal Kaynak (aboutrock). Tüm Hakları Saklıdır.
+
+Bu yazılım, kaynak kodları, arayüz tasarımı ve derlenmiş veriler (tür
+listesi, etkileşim bağlantıları, sanatçı ve şarkı seçimleri) yalnızca
+görüntüleme ve kişisel, ticari olmayan kullanım amacıyla paylaşılmıştır.
+Uygulamayı açabilir ve kişisel kullanım için kendi cihazlarınıza
+yükleyebilirsiniz.
+
+Eser sahibinin yazılı izni olmaksızın:
+- kodun, tasarımın veya derlenmiş verilerin kopyalanması ya da yeniden dağıtılması,
+- değiştirilmesi veya türev eser oluşturulması,
+- herhangi bir bölümünün ticari amaçla kullanılması yasaktır.
+
+Üçüncü taraf içerik (yukarıdaki hükümlerin dışındadır):
+- info_auto.js içindeki sanatçı özetleri Vikipedi maddelerinden
+  derlenmiştir. Bu metinler Creative Commons Atıf-AynıLisanslaPaylaş 4.0
+  (CC BY-SA 4.0) lisansı altındadır: https://creativecommons.org/licenses/by-sa/4.0/
+  Her profilin kaynak bağlantısı uygulama içinde gösterilir.
+- Vikiveri'den alınan bilgiler CC0 (kamu malı) kapsamındadır.
+--------------------------------------------------------------------------------
+Copyright (c) 2026 Erdal Kaynak (aboutrock). All Rights Reserved.
+
+This software, its source code, user interface design and curated data
+(genre list, influence links, artist and song selections) are shared for
+viewing and personal, non-commercial use only. You may open the app and
+install it on your own devices for personal use.
+
+Without the prior written permission of the copyright holder, you may not:
+- copy or redistribute the code, design or curated data,
+- modify it or create derivative works,
+- use any part of it for commercial purposes.
+
+Third-party content (not covered by the terms above):
+- Artist summaries in info_auto.js are compiled from Wikipedia (Vikipedi)
+  articles and remain under the Creative Commons Attribution-ShareAlike 4.0
+  license (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/
+  Each profile links to its source inside the app.
+- Facts taken from Wikidata are CC0 (public domain).

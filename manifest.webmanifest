@@ -1,0 +1,16 @@
+{
+  "name": "Türk Pop ve Rock Soyağacı",
+  "short_name": "Türk Pop Rock",
+  "description": "1950'lerden bugüne Türk pop ve rock türleri: kim kimi etkiledi, öne çıkan sanatçılar ve şarkılar.",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f1ee",
+  "theme_color": "#18181b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

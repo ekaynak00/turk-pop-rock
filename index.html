@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Türk Pop ve Rock Soyağacı</title>
+<meta name="description" content="1950'lerden bugüne Türk pop ve rock türleri: kim kimi etkiledi, öne çıkan sanatçılar ve şarkılar.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#18181b">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Türk Pop Rock">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: time flows top to bottom, one column per family; arrows take the colour of the source family. */
+:root{
+  --bg:#f2f1ee; --surface:#ffffff; --ink:#18181b; --muted:#5f5f66; --line:#d9d7d2; --accent:#d2552d;
+  --band:#e9e7e2;
+  --font-display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121214; --surface:#1b1b1f; --ink:#ececee; --muted:#a3a3ab; --line:#2e2e34; --accent:#ef7a50; --band:#18181c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121214; --surface:#1b1b1f; --ink:#ececee; --muted:#a3a3ab; --line:#2e2e34; --accent:#ef7a50; --band:#18181c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 8px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line);background:var(--surface)}
+.titlerow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:.02em;margin:0;text-transform:uppercase;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sbox{position:relative;flex:1 1 220px;max-width:340px;display:flex}
+input[type=search]{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0;flex:1}
+button{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+label.toggle{font-size:13px;display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--bg);cursor:pointer;color:var(--ink)}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.on{border-color:var(--ink);font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+#stage{position:relative;flex:1;min-height:0}
+#lanehead{position:absolute;left:0;right:0;top:0;height:30px;overflow:hidden;z-index:2;background:color-mix(in srgb,var(--bg) 92%,transparent);border-bottom:1px solid var(--line);pointer-events:none}
+#lanehead .inner{position:absolute;top:0;left:0;height:30px}
+#lanehead span{position:absolute;top:7px;font-family:var(--font-display);font-size:12px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;font-weight:500}
+#yearcol{position:absolute;left:0;top:30px;bottom:0;width:44px;overflow:hidden;z-index:2;background:color-mix(in srgb,var(--bg) 92%,transparent);border-right:1px solid var(--line);pointer-events:none}
+#yearcol .inner{position:absolute;left:0;top:0;width:44px}
+#yearcol span{position:absolute;left:6px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+#yearcol span.dec{color:var(--ink);font-weight:600}
+#scroller{position:absolute;inset:30px 0 0 44px;overflow:auto;-webkit-overflow-scrolling:touch}
+svg{display:block}
+.edge{fill:none;stroke-width:1.1;opacity:.16;transition:opacity .15s}
+.node{cursor:pointer}
+.node rect{stroke-width:1.2}
+.node text{font-family:var(--font-body);fill:var(--ink)}
+.node .nm{font-size:11px;font-weight:500}
+.node .yr{font-size:10px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.node:hover rect{stroke-width:2.2}
+.grid{stroke:var(--line);stroke-width:1}
+.grid.dec{stroke:var(--muted);stroke-opacity:.45}
+.band{fill:var(--band)}
+svg.focus .node{opacity:.16}
+svg.focus .node.on{opacity:1}
+svg.focus .node.sel rect{stroke-width:3}
+svg.focus .edge{opacity:.03}
+svg.focus .edge.on{opacity:.95;stroke-width:2.2}
+#panel{border-top:1px solid var(--line);background:var(--surface);padding:10px 16px 12px;max-height:38%;overflow:auto;font-size:14px;line-height:1.5}
+#panel h2{font-family:var(--font-display);font-weight:600;font-size:20px;margin:0 0 2px;letter-spacing:.02em}
+#panel .meta{color:var(--muted);font-size:13px;margin-bottom:6px}
+#panel .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px}
+#panel .row b{font-size:13px;min-width:92px}
+.gchip{font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid;background:transparent;color:var(--ink);cursor:pointer}
+#results{position:absolute;top:calc(100% + 4px);left:0;width:min(440px,calc(100vw - 32px));max-height:min(60vh,460px);overflow:auto;z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.22);padding:4px 0}
+#results .rhead{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
+#results .ritem{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;width:100%;text-align:left;border:none;border-radius:0;background:transparent;padding:6px 12px;font-size:13.5px;color:var(--ink)}
+#results .ritem.cur,#results .ritem:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+#results .ra{color:var(--muted)}
+#results .rg{font-size:12px;margin-left:auto;font-weight:500}
+#pop .hit{background:color-mix(in srgb,var(--accent) 16%,transparent);border-radius:6px}
+#pop{position:fixed;z-index:20;width:min(380px,calc(100vw - 24px));max-height:min(72vh,600px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.28);padding:12px 14px 14px;display:none;font-size:13px;line-height:1.45}
+#pop.show{display:block}
+#pop header{all:unset;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#pop h3{font-family:var(--font-display);font-weight:600;font-size:18px;margin:0;letter-spacing:.02em}
+#pop .fam{font-size:12px;font-weight:600;margin-top:1px}
+#pop .x{border:none;background:transparent;font-size:18px;line-height:1;padding:2px 6px;color:var(--muted)}
+#pop .art{display:grid;grid-template-columns:22px 1fr;gap:0 6px;margin-top:10px}
+#pop .num{font-family:var(--font-display);font-size:15px;color:var(--muted);text-align:right}
+#pop .art b{font-size:13.5px}
+#pop ul{margin:2px 0 0;padding:0 0 0 16px;color:var(--muted)}
+#pop li{margin:2px 0}
+#pop .lk{display:inline-block;font-size:11px;line-height:1.5;padding:0 7px;margin-left:5px;border-radius:999px;border:1px solid;text-decoration:none;white-space:nowrap;font-weight:500}
+#pop .lk.yt{color:#cc2a1f;border-color:#cc2a1f}
+#pop .lk.sp{color:#14833b;border-color:#14833b}
+#pop .lk.direct.yt{background:#cc2a1f;color:#fff}
+#pop .lk.direct.sp{background:#14833b;color:#fff}
+#pop .lk:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#pop .ln{font-size:11px;color:var(--muted);margin-left:4px}
+#pop .note{margin-top:10px;font-size:11.5px;color:var(--muted)}
+@media (max-width:600px){h1{font-size:20px}.sub{font-size:12px}}
+@media (prefers-reduced-motion: reduce){.edge{transition:none}}
+#pop .ib{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:6px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);background:transparent;font:italic 700 11px/1 Georgia,serif;padding:0;vertical-align:1px;cursor:pointer}
+#pop .ib.has{background:var(--accent);color:#fff}
+#pop .ib:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#drawer{position:fixed;z-index:30;top:0;right:0;height:100vh;height:100dvh;width:min(440px,100vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-14px 0 36px rgba(0,0,0,.25);transform:translateX(105%);transition:transform .22s ease;overflow:auto;font-size:13.5px;line-height:1.5;padding:0 18px 28px}
+#drawer.show{transform:none}
+#drawer .dh{position:sticky;top:0;background:var(--surface);padding:14px 0 10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;z-index:1}
+#drawer h2{font-family:var(--font-display);font-weight:600;font-size:24px;margin:0;letter-spacing:.02em;line-height:1.15}
+#drawer .kind{font-size:12px;font-weight:600;color:var(--accent);margin-top:3px}
+#drawer .x{border:none;background:transparent;font-size:22px;line-height:1;padding:2px 6px;color:var(--muted);cursor:pointer}
+#drawer h4{font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+#drawer dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:12px 0 0}
+#drawer dt{color:var(--muted);font-size:12.5px}
+#drawer dd{margin:0}
+#drawer .sum{margin:12px 0 0}
+#drawer .mem{display:grid;grid-template-columns:1fr auto;gap:0 10px;padding:7px 0;border-bottom:1px dashed var(--line)}
+#drawer .mem b{font-size:14px}
+#drawer .mem .r{color:var(--accent);font-weight:600;font-size:12.5px}
+#drawer .mem .y{color:var(--muted);font-size:12px;text-align:right;white-space:nowrap}
+#drawer .mem .d{grid-column:1/-1;color:var(--muted);font-size:12px}
+#drawer ul{margin:0;padding-left:18px}
+#drawer li{margin:3px 0}
+#drawer .alb{display:grid;grid-template-columns:44px 1fr;gap:2px 8px;margin:0}
+#drawer .alb span{color:var(--muted);font-variant-numeric:tabular-nums}
+#drawer .alb .st{color:var(--accent);font-weight:600}
+#drawer .lk{display:inline-block;font-size:11px;line-height:1.5;padding:0 7px;margin-left:5px;border-radius:999px;border:1px solid;text-decoration:none;white-space:nowrap;font-weight:500}
+#drawer .lk.yt{color:#cc2a1f;border-color:#cc2a1f}
+#drawer .lk.sp{color:#14833b;border-color:#14833b}
+#drawer .lk.direct.yt{background:#cc2a1f;color:#fff}
+#drawer .lk.direct.sp{background:#14833b;color:#fff}
+#drawer .ln{font-size:11px;color:var(--muted);margin-left:4px}
+#drawer .src{margin-top:18px;font-size:12px;color:var(--muted)}
+#drawer .src a{color:var(--accent)}
+#drawer .empty{margin-top:16px;color:var(--muted)}
+#drawer .empty a{color:var(--accent);font-weight:600}
+/* ---------- phone view ---------- */
+.seg{display:none;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:none;border-radius:0;padding:6px 12px}
+.seg button.on{background:var(--ink);color:var(--surface)}
+#mlist{display:none;flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 12px 24px}
+#mlist .dec{position:sticky;top:0;z-index:1;background:var(--bg);font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.06em;color:var(--muted);padding:12px 2px 6px;text-transform:uppercase}
+#mlist .g{display:grid;grid-template-columns:5px 1fr auto;gap:0 10px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 10px 9px 0;margin:0 0 6px;font:inherit;color:var(--ink);overflow:hidden}
+#mlist .g .bar{align-self:stretch;margin:-9px 0}
+#mlist .g b{font-size:14.5px;font-weight:600;line-height:1.25;display:block}
+#mlist .g .s{font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}
+#mlist .g .y{font-family:var(--font-display);font-size:15px;color:var(--muted);font-variant-numeric:tabular-nums}
+#msheet{position:fixed;inset:0;z-index:25;background:var(--surface);overflow:auto;transform:translateY(102%);transition:transform .22s ease;padding:0 16px 32px;font-size:14px;line-height:1.5}
+#msheet.show{transform:none}
+#msheet .sh{position:sticky;top:0;padding-top:calc(12px + env(safe-area-inset-top)) !important;background:var(--surface);padding:12px 0 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start;z-index:1}
+#msheet .back{border:none;background:transparent;font-size:26px;line-height:1;padding:0 6px 0 0;color:var(--ink)}
+#msheet h2{font-family:var(--font-display);font-weight:600;font-size:22px;margin:0;line-height:1.15;letter-spacing:.02em}
+#msheet .meta{font-size:12.5px;font-weight:600;margin-top:2px}
+#msheet h4{font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+#msheet .chipsrow{display:flex;flex-wrap:wrap;gap:6px}
+#msheet .gchip{font-size:13px;padding:5px 11px}
+#msheet .art{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:8px 0;border-bottom:1px dashed var(--line)}
+#msheet .num{font-family:var(--font-display);font-size:16px;color:var(--muted);text-align:right}
+#msheet .art b{font-size:15px}
+#msheet ul{margin:4px 0 0;padding:0;list-style:none}
+#msheet li{margin:6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 0}
+#msheet li .t{margin-right:4px}
+#msheet .lk{display:inline-block;font-size:12px;line-height:1.7;padding:0 9px;margin-left:5px;border-radius:999px;border:1px solid;text-decoration:none;white-space:nowrap;font-weight:500}
+#msheet .lk.yt{color:#cc2a1f;border-color:#cc2a1f}
+#msheet .lk.sp{color:#14833b;border-color:#14833b}
+#msheet .lk.direct.yt{background:#cc2a1f;color:#fff}
+#msheet .lk.direct.sp{background:#14833b;color:#fff}
+#msheet .ln{font-size:11px;color:var(--muted);margin-left:4px}
+#msheet .ib{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:8px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);background:transparent;font:italic 700 13px/1 Georgia,serif;padding:0;vertical-align:2px}
+#msheet .ib.has{background:var(--accent);color:#fff}
+#msheet .hit{background:color-mix(in srgb,var(--accent) 16%,transparent);border-radius:6px}
+#msheet .note{margin-top:14px;font-size:12px;color:var(--muted)}
+body.m .sub{display:none}
+body.m h1{font-size:19px}
+body.m header{padding:calc(10px + env(safe-area-inset-top)) 12px 8px;gap:7px}
+body.m .seg{display:flex}
+body.m .sbox{max-width:none;flex-basis:100%}
+body.m .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+body.m .chips::-webkit-scrollbar{display:none}
+body.m .chip{flex:0 0 auto}
+body.m #fit,body.m label.toggle,body.m #clear{display:none}
+body.m.list #zoomIn,body.m.list #zoomOut{display:none}
+body.m.list #stage,body.m.list #panel{display:none}
+body.m.list #mlist{display:block}
+body.m #drawer{width:100vw}
+@media (prefers-reduced-motion: reduce){#msheet,#drawer{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="titlerow">
+    <h1>Türk Pop ve Rock Soyağacı</h1>
+    <span class="sub" id="subline"></span>
+  </div>
+  <div class="controls">
+    <div class="sbox"><input type="search" id="q" autocomplete="off" placeholder="Tür, sanatçı veya şarkı ara" aria-label="Tür, sanatçı veya şarkı ara" aria-controls="results"><div id="results" role="listbox" hidden></div></div>
+    <div class="seg" id="viewseg" role="group" aria-label="Görünüm"><button data-v="list">Liste</button><button data-v="map">Harita</button></div>
+    <button id="zoomOut" aria-label="Uzaklaştır">−</button>
+    <button id="zoomIn" aria-label="Yakınlaştır">+</button>
+    <button id="fit">Tümünü sığdır</button>
+    <label class="toggle"><input type="checkbox" id="deep"> Tüm soyu izle</label>
+    <button id="clear">Seçimi temizle</button>
+  </div>
+  <div class="chips" id="chips" aria-label="Aileler"></div>
+</header>
+<div id="stage">
+  <div id="lanehead"><div class="inner" id="laneinner"></div></div>
+  <div id="yearcol"><div class="inner" id="yearinner"></div></div>
+  <div id="scroller"><svg id="svg" role="img" aria-label="Türk pop ve rock türlerinin etki oklarıyla zaman çizelgesi"></svg></div>
+</div>
+<section id="panel" aria-live="polite"></section>
+<main id="mlist" aria-label="Yıllara göre türler"></main>
+<div id="msheet" role="dialog" aria-label="Tür ayrıntıları" aria-hidden="true"></div>
+<div id="pop" role="dialog" aria-modal="false" aria-label="Öne çıkan sanatçılar"></div>
+<aside id="drawer" role="dialog" aria-label="Sanatçı profili" aria-hidden="true"></aside>
+<script src="artists.js"></script>
+<script src="info_auto.js"></script>
+<script src="info.js"></script>
+
+<script>
+const FAM = {
+  E:{hdr:"Dış kaynaklar",name:"Dış kaynaklar (pop/rock dışı)", color:"#8c8c94"},
+  K:{hdr:"Kökler",name:"Kökler · rock'n'roll · aranjman", color:"#c9a227"},
+  A:{hdr:"Anadolu",name:"Anadolu pop · Anadolu rock", color:"#d2552d"},
+  O:{hdr:"Özgün · folk",name:"Protest · özgün · şarkı-yazar", color:"#4f9a5b"},
+  T:{hdr:"Etnik",name:"Etnik pop · bölgesel füzyon", color:"#1aa39a"},
+  F:{hdr:"Pop-arabesk",name:"Arabesk-pop · fantezi · pop-arabesk", color:"#b5478a"},
+  P:{hdr:"Pop",name:"Türk pop", color:"#2f8fbf"},
+  R:{hdr:"Rock · alternatif",name:"Rock · alternatif · indie", color:"#8e5bd6"},
+  M:{hdr:"Metal",name:"Metal", color:"#9b2c2c"},
+  H:{hdr:"Rap",name:"Türkçe rap · hip hop", color:"#e0457b"}
+};
+const ORDER = ["E","K","A","O","T","F","P","R","M","H"];
+
+/* [id, kısa ad, tam ad, yıl, aile, [etkilendikleri]] */
+const D = [
+["turku","Türkü · halk","Türk halk müziği (türküler, bağlama geleneği)",1900,"E",[]],
+["tsm","Türk sanat müziği","Türk sanat müziği",1900,"E",[]],
+["kanto","Kanto · tango","Kanto, operet ve Türkçe tango",1910,"E",[]],
+["balkan","Balkan · Roman","Balkan ve Roman müziği",1900,"E",[]],
+["caz","Caz","Caz",1920,"E",[]],
+["misir","Arap · Mısır","Arap ve Mısır film müziği",1940,"E",[]],
+["akdenizmuz","Akdeniz · Latin","Yunan, Akdeniz ve Latin halk müzikleri",1940,"E",[]],
+["avrupapop","Avrupa şarkısı","Fransız şansonu, İtalyan kanzonesi ve Avrupa pop'u",1950,"E",[]],
+["batirnr","Rock and roll","Rock and roll (ABD, İngiltere)",1954,"E",[]],
+["protestfolk","Batı protest folk","Batı protest folk ve şarkı-yazarlar",1962,"E",[]],
+["beat","Beat · psikedelik","Batı beat, psikedelik ve folk rock",1963,"E",["batirnr"]],
+["arabesk","Arabesk","Arabesk (saf çizgi; şemaya dahil edilmedi)",1968,"E",["turku","tsm","misir"]],
+["hardprog","Hard rock · prog","Batı hard rock ve progresif rock",1969,"E",["beat"]],
+["disko","Disko · funk","Disko ve funk",1974,"E",[]],
+["batimetal","Heavy metal","Batı heavy metal ve thrash",1975,"E",["hardprog"]],
+["elektronik","Elektronik","Synthesizer, synth-pop ve elektronik dans müziği",1975,"E",[]],
+["postpunkbati","Post-punk · wave","Batı post-punk, new wave ve darkwave",1978,"E",[]],
+["hiphop","Hip hop","ABD hip hop",1979,"E",["disko"]],
+["batialt","Alt · grunge","Batı alternatif rock, grunge ve britpop",1988,"E",["postpunkbati"]],
+["rnb","R&B · urban pop","Çağdaş R&B ve urban pop",1990,"E",["hiphop"]],
+["batiindie","Indie rock","Batı indie rock ve 2000'ler canlanması",2001,"E",["batialt"]],
+["trapabd","Trap · drill","Atlanta trap ve drill",2012,"E",["hiphop"]],
+
+["ilkrnr","İlk rock'n'roll","Türkiye'de ilk rock'n'roll (okul konserleri, ilk 45'likler)",1957,"K",["batirnr","caz"]],
+["aranjman","Aranjman","Aranjman (Türkçe sözlü yabancı şarkılar)",1961,"K",["avrupapop","kanto","batirnr"]],
+
+["altinmikrofon","Altın Mikrofon","Altın Mikrofon kuşağı (1965–68)",1965,"A",["aranjman","turku","beat"]],
+["anadolupop","Anadolu pop","Anadolu pop",1968,"A",["altinmikrofon","turku","beat"]],
+["anadolupsych","Anadolu psych","Anadolu psikedelik rock (elektro bağlama, fuzz gitar)",1969,"A",["anadolupop","ilkrnr","beat","turku"]],
+["anadoluprog","Anadolu progresif","Anadolu progresif rock ve konsept albümler",1973,"A",["anadolupsych","hardprog","turku"]],
+["anadolurev","Yeni Anadolu rock","Yeni Anadolu rock ve psikedelik canlanma",2014,"A",["anadolupsych","anadolupop","batiindie","turku"]],
+
+["protest","Protest müzik","1970'ler protest ve devrimci müzik",1970,"O",["anadolupop","turku","protestfolk"]],
+["sarkiyazar","Şarkı-yazar · folk","Şarkı-yazar pop ve kent folk'u",1974,"O",["hafif","protestfolk","caz"]],
+["ozgun","Özgün müzik","Özgün müzik",1979,"O",["protest","turku","arabesk"]],
+["yenisarkiyazar","Yeni şarkı-yazar","Yeni kuşak şarkı-yazarlar",2012,"O",["sarkiyazar","batiindie","poprock"]],
+
+["akdeniz","Akdeniz folk-pop","Akdeniz folk-pop'u ve kent türküsü",1983,"T",["turku","akdenizmuz","sarkiyazar"]],
+["etnikpop","Etnik pop","Etnik pop (çok dilli, bölgesel ezgiler)",1993,"T",["turku","akdeniz","balkan","pop80"]],
+["karadeniz","Karadeniz rock","Karadeniz ezgileriyle rock",1996,"T",["turku","rock90","etnikpop"]],
+["sufielektro","Doğu–Batı füzyonu","Doğu–Batı füzyonu, Sufi elektronik ve psikedelik dub",1996,"T",["turku","tsm","elektronik","anadolupsych"]],
+
+["arabeskpop","Arabesk-pop","Arabesk-pop (Gencebay–Tayfur çizgisi)",1970,"F",["arabesk","tsm","hafif"]],
+["fantezi","Fantezi · taverna","Fantezi ve Tarabya taverna müziği",1977,"F",["arabeskpop","tsm","hafif","elektronik"]],
+["poparabesk","Pop-arabesk","90'lar pop-arabesk",1992,"F",["fantezi","arabesk","pop80"]],
+["yeniarabeskpop","Yeni arabesk-pop","Yeni kuşak arabesk-pop (rap altyapılı)",2018,"F",["poparabesk","arabeskrap","trap"]],
+
+["hafif","Türk hafif müziği","Türk hafif müziği (Türkçe besteli ilk pop)",1964,"P",["aranjman","avrupapop","caz"]],
+["pop80","80'ler pop","80'ler pop (kaset ve Eurovision kuşağı)",1980,"P",["hafif","anadolupop","disko","elektronik"]],
+["danspop","Dans-pop","Dans-pop ve Euro-pop",1991,"P",["pop80","disko","elektronik"]],
+["pop90","90'lar pop","90'lar pop patlaması (özel radyo ve TV dönemi)",1992,"P",["pop80","danspop","rnb"]],
+["pop2000","2000'ler pop","2000'ler ana akım pop",2001,"P",["pop90","rnb","elektronik"]],
+["altpop","Alternatif pop","Alternatif pop",2010,"P",["pop2000","sarkiyazar","fantezi"]],
+["pop2010","2010'lar pop","2010'lar ana akım pop",2013,"P",["pop2000","elektronik"]],
+["yenidalga","Yeni kuşak pop","Yeni kuşak indie ve alternatif pop",2019,"P",["altpop","indie","rnb"]],
+
+["rock80","80'ler rock","80'ler Türkçe rock ve Kadıköy sound",1984,"R",["anadoluprog","hardprog","protest"]],
+["rock90","90'lar rock","90'lar Türkçe rock",1993,"R",["rock80","batialt","anadoluprog"]],
+["alt2000","Alternatif rock","Alternatif rock (1999 sonrası)",1999,"R",["rock90","batialt"]],
+["poprock","Pop-rock","2000'ler pop-rock",2003,"R",["rock90","pop90","batialt"]],
+["indie","Bağımsız rock","Bağımsız rock (Üçüncü Yeniler)",2010,"R",["alt2000","batiindie","hiphop"]],
+["postpunk","Post-punk · dark","Türkçe post-punk, darkwave ve synth-wave",2012,"R",["postpunkbati","alt2000","elektronik"]],
+
+["metal86","Türk heavy metal","Türk heavy metal",1986,"M",["batimetal","rock80"]],
+["oryantalmetal","Anadolu metal","Anadolu ve oryantal metal",1997,"M",["metal86","turku","anadoluprog"]],
+["numetal","Alt · nu metal","Alternatif metal ve nu metal",2004,"M",["metal86","batialt","hiphop","alt2000"]],
+
+["almanyarap","Almanya rap'i","Almanya'da doğan Türkçe rap (diaspora)",1991,"H",["hiphop","arabesk"]],
+["yeralti","Yeraltı rap","Türkiye'de yeraltı rap (Nefret, Ceza, Sagopa kuşağı)",1998,"H",["almanyarap","hiphop"]],
+["arabeskrap","Arabesk rap","Arabesk rap",2004,"H",["yeralti","arabesk","fantezi"]],
+["yeniokul","Yeni okul rap","Yeni okul rap ve ana akıma çıkış",2012,"H",["yeralti","hiphop"]],
+["trap","Trap · drill","Türkçe trap ve drill",2017,"H",["yeniokul","trapabd","rnb"]]
+];
+
+
+function decTR(d){ const suf = {1940:"lar",1950:"ler",1960:"lar",1970:"ler",1980:"ler",1990:"lar",2000:"ler",2010:"lar",2020:"ler",2030:"lar"}; return d + "'" + (suf[d] || "ler"); }
+document.getElementById("subline").textContent = D.filter(r => r[4] !== "E").length + " tür, 1950'lerden bugüne · zaman yukarıdan aşağı akar · öne çıkan sanatçılar için bir türe sağ tıkla (veya basılı tut)";
+const Y0 = 1945, Y1 = 2025, PXY = 30, TOP = 16, LANE_W = 150, PILL_W = 138, PILL_H = 22, GAP = 4;
+const W = ORDER.length * LANE_W + 20;
+const byId = {}; D.forEach(d => byId[d[0]] = {id:d[0], short:d[1], full:d[2], year:d[3], fam:d[4], parents:d[5], children:[]});
+Object.values(byId).forEach(n => n.parents.forEach(p => { if(byId[p]) byId[p].children.push(n.id); else console.warn("missing parent", p, n.id); }));
+const yOf = yr => TOP + (Math.max(yr, Y0) - Y0) * PXY;
+
+/* layout: sort each column by year and push overlapping pills down */
+let H = 0;
+ORDER.forEach((f, li) => {
+  const nodes = Object.values(byId).filter(n => n.fam === f).sort((a,b) => a.year - b.year || a.short.localeCompare(b.short, "tr"));
+  let last = -1e9;
+  nodes.forEach(n => {
+    let y = yOf(n.year);
+    if (y < last + PILL_H + GAP) y = last + PILL_H + GAP;
+    n.x = 10 + li * LANE_W + (LANE_W - PILL_W) / 2; n.y = y; last = y;
+    H = Math.max(H, y + PILL_H);
+  });
+});
+H = Math.max(H, yOf(Y1)) + 40;
+
+const svg = document.getElementById("svg");
+let s = `<defs>${ORDER.map(f => `<marker id="ah-${f}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="${FAM[f].color}"/></marker>`).join("")}</defs>`;
+ORDER.forEach((f, li) => { if (li % 2 === 0) s += `<rect class="band" x="${10 + li * LANE_W}" y="0" width="${LANE_W}" height="${H}"/>`; });
+for (let yr = Y0; yr <= Y1; yr += 5) s += `<line class="grid${yr % 10 === 0 ? " dec" : ""}" x1="0" x2="${W}" y1="${yOf(yr)}" y2="${yOf(yr)}"/>`;
+const edges = [];
+Object.values(byId).forEach(c => c.parents.forEach(pid => {
+  const p = byId[pid]; if (!p) return;
+  const x1 = p.x + PILL_W / 2, y1 = p.y + PILL_H, x2 = c.x + PILL_W / 2, y2 = c.y;
+  const k = Math.max(30, Math.abs(y2 - y1) / 2);
+  edges.push(`<path class="edge" data-s="${p.id}" data-t="${c.id}" stroke="${FAM[p.fam].color}" marker-end="url(#ah-${p.fam})" d="M${x1},${y1} C${x1},${y1 + k} ${x2},${y2 - k} ${x2},${y2 - 1}"/>`);
+}));
+s += `<g id="edges">${edges.join("")}</g><g id="nodes">`;
+Object.values(byId).forEach(n => {
+  const c = FAM[n.fam].color, yl = n.year < Y0 ? "kök" : "'" + String(n.year).slice(2);
+  s += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${n.full}, ${n.year}"><title>${n.full} · öne çıkan sanatçılar için sağ tıkla</title>` +
+       `<rect x="${n.x}" y="${n.y}" width="${PILL_W}" height="${PILL_H}" rx="6" fill="${c}" fill-opacity=".16" stroke="${c}"/>` +
+       `<text class="nm" x="${n.x + 8}" y="${n.y + 15}">${n.short}</text>` +
+       `<text class="yr" x="${n.x + PILL_W - 6}" y="${n.y + 15}" text-anchor="end">${yl}</text></g>`;
+});
+s += `</g>`;
+svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+svg.innerHTML = s;
+
+/* rails: family headers and years stay pinned while scrolling */
+const laneInner = document.getElementById("laneinner"), yearInner = document.getElementById("yearinner");
+const scroller = document.getElementById("scroller");
+let zoom = 1;
+function drawRails(){
+  laneInner.innerHTML = ORDER.map((f, li) => `<span style="left:${44 + (10 + li * LANE_W + 6) * zoom}px;color:${FAM[f].color}">${FAM[f].hdr}</span>`).join("");
+  let ys = ""; for (let yr = Y0; yr <= Y1; yr += 5) ys += `<span class="${yr % 10 === 0 ? "dec" : ""}" style="top:${yOf(yr) * zoom - 7}px">${yr}</span>`;
+  yearInner.innerHTML = ys;
+  svg.style.width = W * zoom + "px"; svg.style.height = H * zoom + "px";
+  syncRails();
+}
+function syncRails(){
+  laneInner.style.transform = `translateX(${-scroller.scrollLeft}px)`;
+  yearInner.style.transform = `translateY(${-scroller.scrollTop}px)`;
+}
+scroller.addEventListener("scroll", syncRails, {passive:true});
+function setZoom(z, keepCenter = true){
+  const cx = (scroller.scrollLeft + scroller.clientWidth / 2) / zoom, cy = (scroller.scrollTop + scroller.clientHeight / 2) / zoom;
+  zoom = Math.min(1.6, Math.max(0.2, z)); drawRails();
+  if (keepCenter){ scroller.scrollLeft = cx * zoom - scroller.clientWidth / 2; scroller.scrollTop = cy * zoom - scroller.clientHeight / 2; }
+}
+document.getElementById("zoomIn").onclick = () => setZoom(zoom * 1.25);
+document.getElementById("zoomOut").onclick = () => setZoom(zoom / 1.25);
+document.getElementById("fit").onclick = () => { setZoom(scroller.clientWidth / W, false); scroller.scrollLeft = 0; };
+
+/* selection and highlighting */
+const panel = document.getElementById("panel"), deep = document.getElementById("deep");
+let selected = null, famSel = null;
+const nodeEls = {}; svg.querySelectorAll(".node").forEach(g => nodeEls[g.dataset.id] = g);
+const edgeEls = [...svg.querySelectorAll(".edge")];
+function walk(start, key){ const seen = new Set([start]), st = [start]; while (st.length){ const id = st.pop(); byId[id][key].forEach(x => { if (!seen.has(x)){ seen.add(x); st.push(x); } }); } return seen; }
+function chipHTML(ids){ return ids.length ? ids.map(id => { const n = byId[id]; return `<button class="gchip" data-go="${id}" style="border-color:${FAM[n.fam].color}">${n.short} · ${n.year < Y0 ? "kök" : n.year}</button>`; }).join("") : `<span class="hint">yok</span>`; }
+function renderPanel(){
+  if (!selected){
+    panel.innerHTML = `<h2>Bir türe dokun</h2><div class="meta">Etkilendiği türler ve doğurduğu türler renkli oklarla yanar. Okun rengi, geldiği türün ailesini gösterir. "Tüm soyu izle" açıkken zincir köklere kadar geri, en yeni torunlara kadar ileri gider. Bir türe sağ tıklayınca (veya basılı tutunca) öne çıkan sanatçıları ve şarkıları açılır. Gri kutular pop/rock dışı kaynaklardır: şemaya dahil değiller, yalnızca etkiyi göstermek için duruyorlar.</div>`;
+    return;
+  }
+  const n = byId[selected];
+  const kids = n.children.slice().sort((a,b) => byId[a].year - byId[b].year);
+  const pars = n.parents.slice().sort((a,b) => byId[a].year - byId[b].year);
+  panel.innerHTML = `<h2>${n.full}</h2><div class="meta"><span style="color:${FAM[n.fam].color};font-weight:600">${FAM[n.fam].name}</span> · ortaya çıkışı ${n.year < Y0 ? "1945 öncesi" : n.year}</div>` +
+    `<div class="row"><b>Etkilendiği</b>${chipHTML(pars)}</div><div class="row"><b>Doğurduğu</b>${chipHTML(kids)}</div>` +
+    (ART[n.id] ? `<div class="row"><b>Sanatçılar</b><button class="gchip" data-top="${n.id}" style="border-color:${FAM[n.fam].color}">Öne çıkan sanatçıları ve şarkılarını göster</button></div>` : "");
+}
+function apply(){
+  svg.classList.remove("focus");
+  Object.values(nodeEls).forEach(g => g.classList.remove("on","sel"));
+  edgeEls.forEach(e => e.classList.remove("on"));
+  if (selected){
+    const n = byId[selected];
+    const A = deep.checked ? walk(selected, "parents") : new Set([selected, ...n.parents]);
+    const Dd = deep.checked ? walk(selected, "children") : new Set([selected, ...n.children]);
+    svg.classList.add("focus");
+    [...A, ...Dd].forEach(id => nodeEls[id] && nodeEls[id].classList.add("on"));
+    nodeEls[selected].classList.add("sel");
+    edgeEls.forEach(e => { const a = e.dataset.s, b = e.dataset.t;
+      const up = deep.checked ? (A.has(a) && A.has(b)) : (b === selected);
+      const down = deep.checked ? (Dd.has(a) && Dd.has(b)) : (a === selected);
+      if (up || down) e.classList.add("on"); });
+  } else if (famSel){
+    svg.classList.add("focus");
+    Object.values(byId).forEach(n => { if (n.fam === famSel){ nodeEls[n.id].classList.add("on"); n.children.forEach(c => nodeEls[c].classList.add("on")); } });
+    edgeEls.forEach(e => { if (byId[e.dataset.s].fam === famSel) e.classList.add("on"); });
+  }
+  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.dataset.f === famSel));
+  renderPanel();
+}
+function select(id, scroll){
+  selected = id; famSel = null; apply();
+  if (id && scroll){ const n = byId[id];
+    scroller.scrollTo({left:(n.x + PILL_W / 2) * zoom - scroller.clientWidth / 2, top:n.y * zoom - scroller.clientHeight / 3, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
+}
+svg.addEventListener("click", e => { if (suppressClick){ suppressClick = false; return; } const g = e.target.closest(".node"); select(g ? g.dataset.id : null, false); });
+svg.addEventListener("keydown", e => { const g = e.target.closest(".node"); if (g && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); select(g.dataset.id, false); } });
+panel.addEventListener("click", e => { const t = e.target.closest("[data-top]"); if (t){ const r = t.getBoundingClientRect(); showPop(t.dataset.top, r.left, Math.max(12, r.top - 420)); return; } const b = e.target.closest("[data-go]"); if (b) select(b.dataset.go, true); });
+deep.addEventListener("change", apply);
+document.getElementById("clear").onclick = () => { selected = null; famSel = null; apply(); };
+
+/* family chips */
+document.getElementById("chips").innerHTML = ORDER.map(f => `<button class="chip" data-f="${f}"><i style="background:${FAM[f].color}"></i>${FAM[f].name}</button>`).join("");
+document.getElementById("chips").addEventListener("click", e => { const c = e.target.closest(".chip"); if (!c) return; selected = null; famSel = famSel === c.dataset.f ? null : c.dataset.f; apply(); });
+
+/* search: genres, artists and songs */
+const norm = t => t.replace(/İ/g, "i").replace(/I/g, "ı").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i");
+const IDX = [];
+Object.values(byId).forEach(n => IDX.push({k:"genre", id:n.id, label:n.full, key:norm(n.full + " " + n.short)}));
+Object.entries(ART).forEach(([gid, rows]) => rows.forEach(r => { const [a, ...songs] = r.split("|");
+  IDX.push({k:"artist", id:gid, artist:a, key:norm(a)});
+  songs.forEach(t => IDX.push({k:"song", id:gid, artist:a, song:t, key:norm(t)})); }));
+const q = document.getElementById("q"), res = document.getElementById("results");
+let hits = [], cur = -1, keepPop = 0;
+function closeRes(){ res.hidden = true; res.innerHTML = ""; hits = []; cur = -1; }
+function mark(){ res.querySelectorAll(".ritem").forEach(b => b.classList.toggle("cur", +b.dataset.i === cur)); const c = res.querySelector(".ritem.cur"); if (c) c.scrollIntoView({block:"nearest"}); }
+function runSearch(){
+  const raw = q.value.trim(), v = norm(raw);
+  if (v.length < 2){ closeRes(); return; }
+  const rank = h => h.key.startsWith(v) ? 0 : (h.key.includes(" " + v) ? 1 : 2);
+  const pick = (k, n) => IDX.filter(h => h.k === k && h.key.includes(v)).sort((a, b) => rank(a) - rank(b) || byId[a.id].year - byId[b.id].year).slice(0, n);
+  const g = pick("genre", 6), ar = pick("artist", 12), so = pick("song", 12);
+  hits = [...g, ...ar, ...so]; cur = hits.length ? 0 : -1;
+  if (!hits.length){ res.innerHTML = `<div class="rhead">“${esc(raw)}” için sonuç yok</div>`; res.hidden = false; return; }
+  const gl = id => `<span class="rg" style="color:${FAM[byId[id].fam].color}">${esc(byId[id].short)} · ${byId[id].year < Y0 ? "kök" : byId[id].year}</span>`;
+  let html = "", i = 0;
+  const sec = (title, arr, fn) => { if (!arr.length) return; html += `<div class="rhead">${title}</div>`; arr.forEach(h => { html += `<button type="button" class="ritem" role="option" data-i="${i++}">${fn(h)}</button>`; }); };
+  sec("Türler", g, h => `<b>${esc(h.label)}</b>${gl(h.id)}`);
+  sec("Sanatçılar", ar, h => `<b>${esc(h.artist)}</b>${gl(h.id)}`);
+  sec("Şarkılar", so, h => `<b>${esc(h.song)}</b><span class="ra">${esc(h.artist)}</span>${gl(h.id)}`);
+  res.innerHTML = html; res.hidden = false; mark();
+}
+function go(h){
+  closeRes(); q.blur();
+  if (document.body.classList.contains("list")){ openSheet(h.id, h.artist, h.song); return; }
+  select(h.id, false);
+  const n = byId[h.id];
+  scroller.scrollTo({left:(n.x + PILL_W / 2) * zoom - scroller.clientWidth / 2, top:n.y * zoom - scroller.clientHeight / 3, behavior:"auto"});
+  if (h.k !== "genre"){ keepPop = Date.now() + 800; requestAnimationFrame(() => showPop(h.id, Math.max(12, innerWidth / 2 - 190), 110, h.artist, h.song)); }
+}
+q.addEventListener("input", runSearch);
+q.addEventListener("focus", runSearch);
+q.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown" && hits.length){ e.preventDefault(); cur = (cur + 1) % hits.length; mark(); }
+  else if (e.key === "ArrowUp" && hits.length){ e.preventDefault(); cur = (cur - 1 + hits.length) % hits.length; mark(); }
+  else if (e.key === "Enter" && hits[cur]){ e.preventDefault(); go(hits[cur]); }
+  else if (e.key === "Escape") closeRes();
+});
+res.addEventListener("click", e => { const b = e.target.closest(".ritem"); if (b) go(hits[+b.dataset.i]); });
+document.addEventListener("pointerdown", e => { if (!res.hidden && !res.contains(e.target) && e.target !== q) closeRes(); });
+
+/* right-click card: top 5 artists, 3 songs each */
+const pop = document.getElementById("pop");
+let suppressClick = false, lpTimer = null;
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function showPop(id, x, y, hiArtist, hiSong){
+  const n = byId[id], list = ART[id], c = FAM[n.fam].color;
+  let body;
+  if (list){
+    body = list.map((row, i) => { const [a, ...songs] = row.split("|");
+      return `<div class="art${a === hiArtist && !hiSong ? " hit" : ""}"><span class="num">${i + 1}</span><div><b>${esc(a)}</b>${infoBtn(a)}<ul>${songs.map(t => `<li${a === hiArtist && t === hiSong ? ' class="hit"' : ""}>${esc(t)}${links(a, t)}</li>`).join("")}</ul></div></div>`; }).join("") +
+      `<div class="note">ⓘ sanatçı profilini açar (dolu ⓘ = profil hazır). Dinlemek için ▶ YouTube veya ♫ Spotify'a dokun. Dolu düğmeler şarkıyı doğrudan açar; çerçeveli düğmeler doğru şarkının en üstte ya da yakınında çıktığı bir arama açar. Sanatçılar türün zirve yıllarının belirleyici isimleri olarak seçildi; yayımlamadan önce adları kontrol et.</div>`;
+  } else {
+    body = `<div class="note">Bu, pop/rock dışı bir kaynak; şemaya dahil edilmediği için sanatçı listelenmiyor.</div>`;
+  }
+  pop.innerHTML = `<header><div><h3>${esc(n.full)}</h3><div class="fam" style="color:${c}">${FAM[n.fam].name} · ${n.year < Y0 ? "1945 öncesi" : n.year}</div></div><button class="x" aria-label="Kapat">×</button></header>` + body;
+  pop.classList.add("show"); pop.scrollTop = 0;
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  pop.style.left = Math.max(12, Math.min(x + 12, innerWidth - w - 12)) + "px";
+  pop.style.top = Math.max(12, Math.min(y + 12, innerHeight - h - 12)) + "px";
+  const hit = pop.querySelector(".hit"); if (hit) pop.scrollTop = Math.max(0, hit.offsetTop - 70);
+}
+function clean(t){ return t.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim(); }
+function links(artist, song){
+  const key = clean(artist) + "|" + song, d = (typeof LINKS !== "undefined") && LINKS[key];
+  const q = encodeURIComponent(clean(artist) + " " + clean(song));
+  const yt = d ? `https://www.youtube.com/watch?v=${d.yt}` : `https://www.youtube.com/results?search_query=${q}`;
+  const sp = d ? `https://open.spotify.com/track/${d.sp}` : `https://open.spotify.com/search/${q}`;
+  const cls = d ? " direct" : "", tip = d ? "Şarkıyı doğrudan açar" : "Bu şarkı için arama açar";
+  return `<a class="lk yt${cls}" href="${yt}" target="_blank" rel="noopener" title="${tip} (YouTube)">▶ YouTube</a><a class="lk sp${cls}" href="${sp}" target="_blank" rel="noopener" title="${tip} (Spotify)">♫ Spotify</a>` +
+    (d && d.note ? `<span class="ln">${esc(d.note)}</span>` : "");
+}
+function hidePop(){ pop.classList.remove("show"); }
+svg.addEventListener("contextmenu", e => { const g = e.target.closest(".node"); if (!g) return; e.preventDefault(); showPop(g.dataset.id, e.clientX, e.clientY); });
+svg.addEventListener("touchstart", e => { const g = e.target.closest(".node"); if (!g || e.touches.length !== 1) return; const t = e.touches[0];
+  clearTimeout(lpTimer); lpTimer = setTimeout(() => { suppressClick = true; showPop(g.dataset.id, t.clientX, t.clientY); }, 550); }, {passive:true});
+["touchend","touchmove","touchcancel"].forEach(ev => svg.addEventListener(ev, () => clearTimeout(lpTimer), {passive:true}));
+pop.addEventListener("click", e => { if (e.target.closest(".x")) hidePop(); });
+document.addEventListener("pointerdown", e => { if (pop.classList.contains("show") && !pop.contains(e.target) && !drawer.contains(e.target) && e.button === 0) hidePop(); });
+document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (drawer.classList.contains("show")) closeInfo(); else if (msheet.classList.contains("show")) history.back(); else hidePop(); });
+scroller.addEventListener("scroll", () => { if (Date.now() > keepPop) hidePop(); }, {passive:true});
+
+
+/* ---------- artist profile drawer ---------- */
+const drawer = document.getElementById("drawer");
+const PROF = Object.assign({}, (typeof INFO_AUTO !== "undefined") ? INFO_AUTO : {}, (typeof INFO !== "undefined") ? INFO : {});
+function infoBtn(a){ const has = !!PROF[a];
+  return `<button class="ib${has ? " has" : ""}" data-info="${esc(a).replace(/"/g,"&quot;")}" aria-label="${has ? "Profil" : "Profil (henüz eklenmedi)"}: ${esc(a).replace(/"/g,"&quot;")}" title="${has ? "Profili aç" : "Profil henüz eklenmedi"}">i</button>`; }
+function genresOf(a){ return D.filter(r => (ART[r[0]] || []).some(x => x.split("|")[0] === a)).map(r => r[2]); }
+function albumLinks(artist, album){
+  const q = encodeURIComponent(clean(artist) + " " + clean(album));
+  return `<a class="lk yt" href="https://www.youtube.com/results?search_query=${q}+full+album" target="_blank" rel="noopener" title="Bu albümü YouTube'da ara">▶ YouTube</a><a class="lk sp" href="https://open.spotify.com/search/${q}/albums" target="_blank" rel="noopener" title="Bu albümü Spotify'da ara">♫ Spotify</a>`; }
+function showInfo(a){
+  const p = PROF[a], g = genresOf(a);
+  let h = `<div class="dh"><div><h2>${esc(a)}</h2><div class="kind">${p ? (p.type === "band" ? "Grup" : "Solo sanatçı") : "Profil"}${g.length ? " · " + esc(g.join(", ")) : ""}</div></div><button class="x" aria-label="Profili kapat">×</button></div>`;
+  if (!p){
+    h += `<div class="empty">Bu profil henüz eklenmedi. Eklenene kadar ${esc(a)} hakkında <a href="https://tr.wikipedia.org/w/index.php?search=${encodeURIComponent(clean(a))}" target="_blank" rel="noopener">Vikipedi'de okuyabilirsin ↗</a>.</div>`;
+  } else {
+    const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : "";
+    h += `<dl>` + (p.type === "band"
+      ? row("Kuruluş", [p.formed, p.origin].filter(Boolean).join(", ")) + row("Aktif", p.active) + row("Dağılış", p.ended)
+      : row(p.born ? "Doğum" : "Memleket", [p.born, p.birthplace || (p.born ? "" : p.origin)].filter(Boolean).join(", ")) + row("Ölüm", p.died) + row("Enstrümanlar", p.instruments) + row("Aktif", p.active))
+      + row("Türler", p.genres) + row("Plak şirketleri", p.labels) + `</dl>`;
+    if (p.summary) h += `<p class="sum">${esc(p.summary)}</p>`;
+    if (p.members) h += `<h4>Üyeler</h4>` + p.members.map(m => `<div class="mem"><div><b>${esc(m.name)}</b> <span class="r">${esc(m.role || "")}</span></div><div class="y">${esc(m.years || "")}</div><div class="d">${m.born ? "Doğum " + esc(m.born) : ""}${m.died ? " · ölüm " + esc(m.died) : ""}${m.note ? (m.born ? " · " : "") + esc(m.note) : ""}</div></div>`).join("");
+    if (p.moreMembers) h += `<div class="d" style="color:var(--muted);font-size:12px;margin-top:6px">+ ${p.moreMembers} eski üye daha</div>`;
+    if (p.achievements) h += `<h4>Başarılar</h4><ul>${p.achievements.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
+    if (p.awards) h += `<h4>Ödüller ve onurlar</h4><ul>${p.awards.map(t => `<li>${esc(t)}</li>`).join("")}${p.moreAwards ? `<li style="color:var(--muted)">+ ${p.moreAwards} tane daha</li>` : ""}</ul>`;
+    if (p.albums) h += `<h4>Stüdyo albümleri <span style="text-transform:none;letter-spacing:0">(★ ${p.auto ? "en bilinenler" : "en sevilenler"})</span></h4><div class="alb">${p.albums.map(([t, y, n]) => `<span>${y}</span><div>${esc(t)}${n ? ` <span class="st">${esc(n)}</span>` : ""}${albumLinks(a, t)}</div>`).join("")}</div>`;
+    if (p.songs) h += `<h4>${p.auto ? "Öne çıkan şarkılar" : "En sevilen şarkılar"}</h4><ul>${p.songs.map(t => `<li>${esc(t)}${links(a, t)}</li>`).join("")}</ul>`;
+    if (p.sources) h += p.auto
+      ? `<div class="src">${esc(p.checked)} tarihinde ${p.sources.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" ve ")} kaynaklarından otomatik dolduruldu. Elle kontrol edilmedi: ödül ve albüm listeleri eksik olabilir, yayımlamadan önce temel bilgileri doğrula.</div>`
+      : `<div class="src">${esc(p.checked || "")} tarihinde şu kaynaklarla kontrol edildi: ${p.sources.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(", ")}.</div>`;
+  }
+  if (!drawer.classList.contains("show")) history.pushState({gorm:"d"}, "");
+  drawer.innerHTML = h; drawer.scrollTop = 0;
+  drawer.classList.add("show"); drawer.setAttribute("aria-hidden", "false");
+  drawer.querySelector(".x").focus({preventScroll:true});
+}
+function hideInfo(){ drawer.classList.remove("show"); drawer.setAttribute("aria-hidden", "true"); }
+function closeInfo(){ if (history.state && history.state.gorm === "d") history.back(); else hideInfo(); }
+pop.addEventListener("click", e => { const b = e.target.closest(".ib"); if (b){ e.stopPropagation(); showInfo(b.dataset.info); } });
+drawer.addEventListener("click", e => { if (e.target.closest(".x")) closeInfo(); });
+
+
+/* ---------- phone view: list of genres by decade, full-screen genre sheet ---------- */
+const mq = matchMedia("(max-width: 760px)");
+const mlist = document.getElementById("mlist"), msheet = document.getElementById("msheet");
+let view = "list"; try { view = localStorage.getItem("tgorm_view") || "list"; } catch (e) {}
+let mFam = null;
+function setMode(){
+  const m = mq.matches;
+  document.body.classList.toggle("m", m);
+  document.body.classList.toggle("list", m && view === "list");
+  document.querySelectorAll("#viewseg button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
+}
+function renderList(){
+  const ns = Object.values(byId).filter(n => !mFam || n.fam === mFam).sort((a, b) => a.year - b.year || a.full.localeCompare(b.full));
+  let h = "", last = null;
+  for (const n of ns){
+    const d = n.year < Y0 ? "Pop/rock dışı kökler" : decTR(Math.floor(n.year / 10) * 10);
+    if (d !== last){ h += `<div class="dec">${d}</div>`; last = d; }
+    const from = n.parents.slice().sort((a, b) => byId[a].year - byId[b].year).map(p => byId[p].short).join(", ");
+    h += `<button class="g" data-g="${n.id}"><span class="bar" style="background:${FAM[n.fam].color}"></span><span><b>${esc(n.full)}</b><span class="s">${from ? "kaynağı: " + esc(from) : esc(FAM[n.fam].name)}${n.children.length ? ` · ${n.children.length} türe yol açtı` : ""}</span></span><span class="y">${n.year < Y0 ? "" : n.year}</span></button>`;
+  }
+  mlist.innerHTML = h || `<div class="note">Burada bir şey yok.</div>`;
+}
+function sheetHTML(id, hiA, hiS){
+  const n = byId[id], c = FAM[n.fam].color, list = ART[id];
+  const by = k => n[k].slice().sort((a, b) => byId[a].year - byId[b].year);
+  let h = `<div class="sh"><button class="back" aria-label="Geri">‹</button><div><h2>${esc(n.full)}</h2><div class="meta" style="color:${c}">${esc(FAM[n.fam].name)} · ${n.year < Y0 ? "1945 öncesi" : "ortaya çıkışı " + n.year}</div></div></div>`;
+  h += `<h4>Etkilendiği</h4><div class="chipsrow">${chipHTML(by("parents"))}</div><h4>Doğurduğu</h4><div class="chipsrow">${chipHTML(by("children"))}</div>`;
+  if (list){
+    h += `<h4>Öne çıkan sanatçılar</h4>` + list.map((row, i) => { const [a, ...songs] = row.split("|");
+      return `<div class="art${a === hiA && !hiS ? " hit" : ""}"><span class="num">${i + 1}</span><div><b>${esc(a)}</b>${infoBtn(a)}<ul>${songs.map(t => `<li${a === hiA && t === hiS ? ' class="hit"' : ""}><span class="t">${esc(t)}</span>${links(a, t)}</li>`).join("")}</ul></div></div>`; }).join("") +
+      `<div class="note">ⓘ profili açar. ▶ YouTube ve ♫ Spotify şarkıyı açar: dolu düğmeler doğrudan gider, çerçeveliler arama açar. Yayımlamadan önce adları kontrol et.</div>`;
+  } else h += `<div class="note">Bu, pop/rock dışı bir kaynak; şemaya dahil edilmediği için sanatçı listelenmiyor.</div>`;
+  return h;
+}
+function openSheet(id, hiA, hiS, push){
+  msheet.innerHTML = sheetHTML(id, hiA, hiS);
+  msheet.classList.add("show"); msheet.setAttribute("aria-hidden", "false"); msheet.scrollTop = 0;
+  const hit = msheet.querySelector(".hit"); if (hit) msheet.scrollTop = Math.max(0, hit.offsetTop - 90);
+  if (push !== false) history.pushState({gorm:"s", id}, "");
+}
+function closeSheet(){ msheet.classList.remove("show"); msheet.setAttribute("aria-hidden", "true"); }
+mlist.addEventListener("click", e => { const b = e.target.closest(".g"); if (b) openSheet(b.dataset.g); });
+msheet.addEventListener("click", e => {
+  if (e.target.closest(".back")){ history.back(); return; }
+  const g = e.target.closest("[data-go]"); if (g){ openSheet(g.dataset.go); return; }
+  const i = e.target.closest(".ib"); if (i) showInfo(i.dataset.info);
+});
+addEventListener("popstate", () => {
+  if (drawer.classList.contains("show")){ hideInfo(); return; }
+  const st = history.state;
+  if (st && st.gorm === "s") openSheet(st.id, null, null, false); else closeSheet();
+});
+document.getElementById("chips").addEventListener("click", () => { mFam = famSel; renderList(); mlist.scrollTop = 0; });
+document.getElementById("viewseg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+  view = b.dataset.v; try { localStorage.setItem("tgorm_view", view); } catch (err) {}
+  setMode();
+  if (view === "map") requestAnimationFrame(() => { drawRails(); syncRails(); select(selected || "anadolupop", true); });
+});
+mq.addEventListener("change", () => { setMode(); if (!mq.matches) requestAnimationFrame(() => { drawRails(); syncRails(); }); });
+setMode(); renderList();
+
+/* açılışta Anadolu pop seçili gelsin */
+drawRails();
+if (scroller.clientWidth < 700) setZoom(0.8, false);
+select("anadolupop", true);
+
+/* installable app: offline cache (only on a real https site) */
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
+  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
